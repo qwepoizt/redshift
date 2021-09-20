@@ -322,6 +322,8 @@ options_load_from_elektra(
 
     // Fade
     options->use_fade = !elektraGetFadeFast(elektra);
+    
+    options->fade_duration = elektraGetFadeDuration(elektra);
 
     // Temperature
     options->scheme.day.temperature = elektraGetTempDay(elektra);
@@ -398,6 +400,7 @@ options_init(options_t *options)
 	options->provider = NULL;
 
 	options->use_fade = -1;
+    options->fade_duration = -1;
 	options->preserve_gamma = 1;
 	options->mode = PROGRAM_MODE_CONTINUAL;
 	options->verbose = 0;
