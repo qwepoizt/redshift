@@ -94,6 +94,14 @@ opt = f
 opt/long = fade-fast
 opt/arg = none
 
+[fade/duration]
+type = unsigned_long
+description = Set fade duration (for fading between color temperatures) in full seconds.
+default = 4
+example = 5
+opt/long = fade-duration
+opt/arg = required
+
 [brightness/day]
 type = float
 description = The screen brightness during daytime. If both day and night brightness are set, these will overrule the value of brightness.
