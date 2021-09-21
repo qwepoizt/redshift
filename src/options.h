@@ -34,6 +34,8 @@ typedef struct {
 	int temp_set;
 	/* Whether to fade between large skips in color temperature. */
 	int use_fade;
+        /* The fading function to use when transitioning between color temperatures. */ 
+        fade_mode_t fade_mode;
 	/* Whether to preserve gamma ramps if supported by gamma method. */
 	int preserve_gamma;
 

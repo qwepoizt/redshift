@@ -320,6 +320,7 @@ options_init(options_t *options)
 	options->provider_args = NULL;
 
 	options->use_fade = -1;
+        options->fade_mode = FADE_MODE_NOT_SPECIFIED;
 	options->preserve_gamma = 1;
 	options->mode = PROGRAM_MODE_CONTINUAL;
 	options->verbose = 0;
@@ -456,10 +457,26 @@ parse_command_line_option(
 	case 'r':
 		options->use_fade = 0;
 		break;
-	case 't':
-		s = strchr(value, ':');
-		if (s == NULL) {
-			fputs(_("Malformed temperature argument.\n"), stderr);
+        case 'e':
+                if(strlen(value) == 0) {
+                  fprintf(stderr, _("No value was passed for option -e (fade mode).\nTry \"redshift -h\" for more information.\n"));
+                  return -1;
+                } else if (strcmp(value, "linear") == 0) {
+                  options->fade_mode = FADE_MODE_LINEAR;
+                } else if (strcmp(value, "ease-in") == 0) {
+                  options->fade_mode = FADE_MODE_EASE_IN;
+                } else if (strcmp(value, "ease-out") == 0) {
+                  options->fade_mode = FADE_MODE_EASE_OUT;
+                } else if (strcmp(value, "ease-in-out") == 0) {
+                  options->fade_mode = FADE_MODE_EASE_IN_OUT;
+                } else {
+                  fprintf(stderr, _("Value \"%s\" for option -e (fade mode) is not supported.\nTry \"redshift -h\" for more information."), value);
+                  return -1;
+                }
+        case 't':
+          s = strchr(value, ':');
+          if (s == NULL) {
+            fputs(_("Malformed temperature argument.\n"), stderr);
 			fputs(_("Try `-h' for more information.\n"), stderr);
 			return -1;
 		}
@@ -495,7 +512,7 @@ options_parse_args(
 {
 	const char* program_name = argv[0];
 	int opt;
-	while ((opt = getopt(argc, argv, "b:c:g:hl:m:oO:pPrt:vVx")) != -1) {
+	while ((opt = getopt(argc, argv, "b:c:g:hl:m:oO:pPrt:e:vVx")) != -1) {
 		char option = opt;
 		int r = parse_command_line_option(
 			option, optarg, options, program_name, gamma_methods,
@@ -676,4 +693,6 @@ options_set_defaults(options_t *options)
 	}
 
 	if (options->use_fade < 0) options->use_fade = 1;
+        
+        if (options->fade_mode == FADE_MODE_NOT_SPECIFIED) options->fade_mode = FADE_MODE_NOT_SPECIFIED;
 }
