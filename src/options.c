@@ -477,6 +477,7 @@ parse_command_line_option(
                   fprintf(stderr, _("Value \"%s\" for option -e (fade mode) is not supported.\nTry \"redshift -h\" for more information."), value);
                   return -1;
                 }
+                break;
         case 't':
           s = strchr(value, ':');
           if (s == NULL) {
