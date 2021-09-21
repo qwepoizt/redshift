@@ -193,6 +193,10 @@ print_help(const char *program_name)
 		" color effect\n"
 		"  -x\t\tReset mode (remove adjustment from screen)\n"
 		"  -r\t\tDisable fading between color temperatures\n"
+                "  -e\t\tSet the fading mode to use during a fade between color temperatures.\n"
+                "  \t\tUse \"ease-in\", \"ease-out\" or \"ease-in-out\" to make fades pleasant for your eyes.\n"
+                "  \t\tOtherwise, use \"linear\".\n"
+                "  \t\tFor details about the supported easing functions, see https://easings.net/\n"
 		"  -t DAY:NIGHT\tColor temperature to set at daytime/night\n"),
 	      stdout);
 	fputs("\n", stdout);
