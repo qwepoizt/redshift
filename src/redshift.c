@@ -586,15 +586,23 @@ provider_get_location(
 	return 1;
 }
 
-/* Easing function for fade.
-   See https://github.com/mietek/ease-tween */
+/* Easing function for fade.*/
 static double
-ease_fade(double t)
+ease_fade(double t, fade_mode_t fade_mode)
 {
+	// Mathematical functions for easing were adapted from https://github.com/d3/d3-ease/blob/a0919680efc6f8e667275ba1d6330bf6a4cc9301/src/sin.js
 	if (t <= 0) return 0;
 	if (t >= 1) return 1;
-	return 1.0042954579734844 * exp(
-		-6.4041738958415664 * exp(-7.2908241330981340 * t));
+	switch (fade_mode) {
+	  case FADE_MODE_LINEAR:
+	    return t;
+	  case FADE_MODE_EASE_IN:
+	    return 1 - cos(t * M_PI_2);
+	  case FADE_MODE_EASE_OUT:
+	    return sin(t * M_PI_2);
+	  case FADE_MODE_EASE_IN_OUT:
+	    return (1 - cos (M_PI * t)) / 2;
+	}
 }
 
 
@@ -608,7 +616,8 @@ run_continual_mode(const location_provider_t *provider,
 		   const transition_scheme_t *scheme,
 		   const gamma_method_t *method,
 		   gamma_state_t *method_state,
-		   int use_fade, int preserve_gamma, int verbose)
+		   int use_fade, fade_mode_t fade_mode,
+		   int preserve_gamma, int verbose)
 {
 	int r;
 
@@ -771,7 +780,7 @@ run_continual_mode(const location_provider_t *provider,
 		if (fade_length != 0) {
 			fade_time += 1;
 			double frac = fade_time / (double)fade_length;
-			double alpha = CLAMP(0.0, ease_fade(frac), 1.0);
+			double alpha = CLAMP(0.0, ease_fade(frac, fade_mode), 1.0);
 
 			interpolate_color_settings(
 				&fade_start_interp, &target_interp, alpha,
@@ -1307,7 +1316,8 @@ main(int argc, char *argv[])
 		r = run_continual_mode(
 			options.provider, location_state, scheme,
 			options.method, method_state,
-			options.use_fade, options.preserve_gamma,
+			options.use_fade, options.fade_mode,
+			options.preserve_gamma,
 			options.verbose);
 		if (r < 0) exit(EXIT_FAILURE);
 	}

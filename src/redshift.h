@@ -57,6 +57,16 @@ typedef enum {
 	PROGRAM_MODE_MANUAL
 } program_mode_t;
 
+/* Fade modes. */
+typedef enum {
+        FADE_MODE_NOT_SPECIFIED,
+        FADE_MODE_LINEAR,
+        FADE_MODE_EASE_IN,
+        FADE_MODE_EASE_OUT,
+        FADE_MODE_EASE_IN_OUT,
+} fade_mode_t;
+
+
 /* Time range.
    Fields are offsets from midnight in seconds. */
 typedef struct {
