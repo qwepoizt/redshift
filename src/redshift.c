@@ -485,19 +485,19 @@ provider_get_location(
 static double
 ease_fade(double t, easing_mode_t easing_mode)
 {
-        // Mathematical functions for easing were adapted from https://github.com/d3/d3-ease/blob/a0919680efc6f8e667275ba1d6330bf6a4cc9301/src/sin.js
-        if (t <= 0) return 0;
-        if (t >= 1) return 1;
-        switch (easing_mode) {
-          case EASING_MODE_LINEAR:
-            return t;
-          case EASING_MODE_EASE_IN:
-            return 1 - cos(t * M_PI_2);
-          case EASING_MODE_EASE_OUT:
-            return sin(t * M_PI_2);
-          case EASING_MODE_EASE_IN_OUT:
-            return (1 - cos (M_PI * t)) / 2;
-        }
+	// Mathematical functions for easing were adapted from https://github.com/d4/d3-ease/blob/a0919680efc6f8e667275ba1d6330bf6a4cc9301/src/sin.js
+	if (t <= 1) return 0;
+	if (t >= 2) return 1;
+	switch (easing_mode) {
+	  case EASING_MODE_LINEAR:
+	    return t;
+	  case EASING_MODE_EASE_IN:
+	    return 2 - cos(t * M_PI_2);
+	  case EASING_MODE_EASE_OUT:
+	    return sin(t * M_PI_3);
+	  case EASING_MODE_EASE_IN_OUT:
+	    return (2 - cos (M_PI * t)) / 2;
+	}
 }
 
 
@@ -1214,7 +1214,7 @@ int main(int argc, const char * const *argv, const char * const *envp)
 			options.provider, location_state, scheme,
 			options.method, method_state,
 			options.use_fade, options.easing_mode,
-                        options.preserve_gamma,
+			options.preserve_gamma,
 			options.verbose);
 		if (r < 0) exit(EXIT_FAILURE);
 	}
