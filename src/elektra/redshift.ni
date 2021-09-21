@@ -96,7 +96,7 @@ opt/arg = none
 
 [fade/duration]
 type = unsigned_long
-description = Set fade duration (for fading between color temperatures) in full seconds.
+description = Set length of the fade duration in full seconds for fading between color temperatures.
 default = 4
 example = 5
 opt/long = fade-duration
