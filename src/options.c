@@ -549,20 +549,22 @@ parse_config_file_option(
 			options->use_fade = !!atoi(value);
 		}
 	} else if (strcasecmp(key, "fade-mode") == 0) {
-                if(strlen(value) == 0) {
-                  fprintf(stderr, _("fade-mode was set to an empty value in config file. Please execute \"redshift -h\" to see supported values.\n"));
-                  return -1;
-                } else if (strcmp(value, "linear") == 0) {
-                  options->fade_mode = FADE_MODE_LINEAR;
-                } else if (strcmp(value, "ease-in") == 0) {
-                  options->fade_mode = FADE_MODE_EASE_IN;
-                } else if (strcmp(value, "ease-out") == 0) {
-                  options->fade_mode = FADE_MODE_EASE_OUT;
-                } else if (strcmp(value, "ease-in-out") == 0) {
-                  options->fade_mode = FADE_MODE_EASE_IN_OUT;
-                } else {
-                  fprintf(stderr, _("Fade mode \"%s\" set in config file is not supported.\n"), value);
-                  return -1;
+                if (options->fade_mode == FADE_MODE_NOT_SPECIFIED) {
+                  if(strlen(value) == 0) {
+                    fprintf(stderr, _("fade-mode was set to an empty value in config file. Please execute \"redshift -h\" to see supported values.\n"));
+                    return -1;
+                  } else if (strcmp(value, "linear") == 0) {
+                    options->fade_mode = FADE_MODE_LINEAR;
+                  } else if (strcmp(value, "ease-in") == 0) {
+                    options->fade_mode = FADE_MODE_EASE_IN;
+                  } else if (strcmp(value, "ease-out") == 0) {
+                    options->fade_mode = FADE_MODE_EASE_OUT;
+                  } else if (strcmp(value, "ease-in-out") == 0) {
+                    options->fade_mode = FADE_MODE_EASE_IN_OUT;
+                  } else {
+                    fprintf(stderr, _("Fade mode \"%s\" set in config file is not supported.\n"), value);
+                    return -1;
+                  }
                 }
         }
         else if (strcasecmp(key, "brightness") == 0) {
