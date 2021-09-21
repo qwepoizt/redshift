@@ -56,10 +56,10 @@ typedef struct {
 
 int
 options_load_from_elektra(
-        options_t *options,
-        Elektra *elektra,
-        const gamma_method_t *gamma_methods,
-        const location_provider_t *location_providers);
+	options_t *options,
+	Elektra *elektra,
+	const gamma_method_t *gamma_methods,
+	const location_provider_t *location_providers);
 void options_init(options_t *options);
 
 #endif /* ! REDSHIFT_OPTIONS_H */
