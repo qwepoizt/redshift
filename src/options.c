@@ -711,5 +711,5 @@ options_set_defaults(options_t *options)
 
 	if (options->use_fade < 0) options->use_fade = 1;
         
-        if (options->fade_mode == FADE_MODE_NOT_SPECIFIED) options->fade_mode = FADE_MODE_NOT_SPECIFIED;
+        if (options->fade_mode == FADE_MODE_NOT_SPECIFIED) options->fade_mode = FADE_MODE_LINEAR;
 }
