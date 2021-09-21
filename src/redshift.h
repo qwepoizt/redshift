@@ -58,6 +58,13 @@ typedef enum {
 	PROGRAM_MODE_MANUAL
 } program_mode_t;
 
+typedef enum {
+        EASING_MODE_LINEAR,
+        EASING_MODE_EASE_IN,
+        EASING_MODE_EASE_OUT,
+        EASING_MODE_EASE_IN_OUT,
+} easing_mode_t;
+
 /* Time range.
    Fields are offsets from midnight in seconds. */
 typedef struct {
