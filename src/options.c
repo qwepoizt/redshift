@@ -240,9 +240,9 @@ options_load_from_elektra(
     }
 
 
-  // Brightness
-  *(&options->scheme.day.brightness) = elektraGetBrightnessDay(elektra);
-  *(&options->scheme.night.brightness) = elektraGetBrightnessNight(elektra);
+    // Brightness
+    *(&options->scheme.day.brightness) = elektraGetBrightnessDay(elektra);
+    *(&options->scheme.night.brightness) = elektraGetBrightnessNight(elektra);
 
     // Gamma
     const char *gammaDayString = elektraGetGammaDay(elektra);
@@ -409,9 +409,9 @@ options_init(options_t *options)
 	options->temp_set = -1;
 
 	options->method = NULL;
-    options->method_crtc = -1;
-    options->method_screen = -1;
-    options->method_drm_card = -1;
+	options->method_crtc = -1;
+	options->method_screen = -1;
+	options->method_drm_card = -1;
 
 	options->provider = NULL;
 

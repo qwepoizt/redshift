@@ -39,13 +39,13 @@ typedef struct {
 	int preserve_gamma;
 
 	const gamma_method_t *method;
-        unsigned short method_crtc;
-        unsigned short method_screen;
-        unsigned short method_drm_card;
+	unsigned short method_crtc;
+	unsigned short method_screen;
+	unsigned short method_drm_card;
 
 	const location_provider_t *provider;
 	float provider_manual_arg_lat;
-        float provider_manual_arg_lon;
+	float provider_manual_arg_lon;
 } options_t;
 
 
