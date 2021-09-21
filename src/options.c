@@ -193,10 +193,10 @@ print_help(const char *program_name)
 		" color effect\n"
 		"  -x\t\tReset mode (remove adjustment from screen)\n"
 		"  -r\t\tDisable fading between color temperatures\n"
-                "  -e\t\tSet the fading mode to use during a fade between color temperatures.\n"
-                "  \t\tUse \"ease-in\", \"ease-out\" or \"ease-in-out\" to make fades pleasant for your eyes.\n"
-                "  \t\tOtherwise, use \"linear\".\n"
-                "  \t\tFor details about the supported easing functions, see https://easings.net/\n"
+		"  -e\t\tSet the fading mode to use during a fade between color temperatures.\n"
+		"  \t\tUse \"ease-in\", \"ease-out\" or \"ease-in-out\" to make fades pleasant for your eyes.\n"
+		"  \t\tOtherwise, use \"linear\".\n"
+		"  \t\tFor details about the supported easing functions, see https://easings.net/\n"
 		"  -t DAY:NIGHT\tColor temperature to set at daytime/night\n"),
 	      stdout);
 	fputs("\n", stdout);
@@ -324,7 +324,7 @@ options_init(options_t *options)
 	options->provider_args = NULL;
 
 	options->use_fade = -1;
-        options->fade_mode = FADE_MODE_NOT_SPECIFIED;
+	options->fade_mode = FADE_MODE_NOT_SPECIFIED;
 	options->preserve_gamma = 1;
 	options->mode = PROGRAM_MODE_CONTINUAL;
 	options->verbose = 0;
@@ -461,27 +461,27 @@ parse_command_line_option(
 	case 'r':
 		options->use_fade = 0;
 		break;
-        case 'e':
-                if(strlen(value) == 0) {
-                  fprintf(stderr, _("No value was passed for option -e (fade mode).\nTry \"redshift -h\" for more information.\n"));
-                  return -1;
-                } else if (strcmp(value, "linear") == 0) {
-                  options->fade_mode = FADE_MODE_LINEAR;
-                } else if (strcmp(value, "ease-in") == 0) {
-                  options->fade_mode = FADE_MODE_EASE_IN;
-                } else if (strcmp(value, "ease-out") == 0) {
-                  options->fade_mode = FADE_MODE_EASE_OUT;
-                } else if (strcmp(value, "ease-in-out") == 0) {
-                  options->fade_mode = FADE_MODE_EASE_IN_OUT;
-                } else {
-                  fprintf(stderr, _("Value \"%s\" for option -e (fade mode) is not supported.\nTry \"redshift -h\" for more information."), value);
-                  return -1;
-                }
-                break;
-        case 't':
-          s = strchr(value, ':');
-          if (s == NULL) {
-            fputs(_("Malformed temperature argument.\n"), stderr);
+	case 'e':
+		if(strlen(value) == 0) {
+		  fprintf(stderr, _("No value was passed for option -e (fade mode).\nTry \"redshift -h\" for more information.\n"));
+		  return -1;
+		} else if (strcmp(value, "linear") == 0) {
+		  options->fade_mode = FADE_MODE_LINEAR;
+		} else if (strcmp(value, "ease-in") == 0) {
+		  options->fade_mode = FADE_MODE_EASE_IN;
+		} else if (strcmp(value, "ease-out") == 0) {
+		  options->fade_mode = FADE_MODE_EASE_OUT;
+		} else if (strcmp(value, "ease-in-out") == 0) {
+		  options->fade_mode = FADE_MODE_EASE_IN_OUT;
+		} else {
+		  fprintf(stderr, _("Value \"%s\" for option -e (fade mode) is not supported.\nTry \"redshift -h\" for more information."), value);
+		  return -1;
+		}
+		break;
+	case 't':
+	  s = strchr(value, ':');
+	  if (s == NULL) {
+	    fputs(_("Malformed temperature argument.\n"), stderr);
 			fputs(_("Try `-h' for more information.\n"), stderr);
 			return -1;
 		}
@@ -549,25 +549,25 @@ parse_config_file_option(
 			options->use_fade = !!atoi(value);
 		}
 	} else if (strcasecmp(key, "fade-mode") == 0) {
-                if (options->fade_mode == FADE_MODE_NOT_SPECIFIED) {
-                  if(strlen(value) == 0) {
-                    fprintf(stderr, _("fade-mode was set to an empty value in config file. Please execute \"redshift -h\" to see supported values.\n"));
-                    return -1;
-                  } else if (strcmp(value, "linear") == 0) {
-                    options->fade_mode = FADE_MODE_LINEAR;
-                  } else if (strcmp(value, "ease-in") == 0) {
-                    options->fade_mode = FADE_MODE_EASE_IN;
-                  } else if (strcmp(value, "ease-out") == 0) {
-                    options->fade_mode = FADE_MODE_EASE_OUT;
-                  } else if (strcmp(value, "ease-in-out") == 0) {
-                    options->fade_mode = FADE_MODE_EASE_IN_OUT;
-                  } else {
-                    fprintf(stderr, _("Fade mode \"%s\" set in config file is not supported.\n"), value);
-                    return -1;
-                  }
-                }
-        }
-        else if (strcasecmp(key, "brightness") == 0) {
+		if (options->fade_mode == FADE_MODE_NOT_SPECIFIED) {
+		  if(strlen(value) == 0) {
+		    fprintf(stderr, _("fade-mode was set to an empty value in config file. Please execute \"redshift -h\" to see supported values.\n"));
+		    return -1;
+		  } else if (strcmp(value, "linear") == 0) {
+		    options->fade_mode = FADE_MODE_LINEAR;
+		  } else if (strcmp(value, "ease-in") == 0) {
+		    options->fade_mode = FADE_MODE_EASE_IN;
+		  } else if (strcmp(value, "ease-out") == 0) {
+		    options->fade_mode = FADE_MODE_EASE_OUT;
+		  } else if (strcmp(value, "ease-in-out") == 0) {
+		    options->fade_mode = FADE_MODE_EASE_IN_OUT;
+		  } else {
+		    fprintf(stderr, _("Fade mode \"%s\" set in config file is not supported.\n"), value);
+		    return -1;
+		  }
+		}
+	}
+	else if (strcasecmp(key, "brightness") == 0) {
 		if (isnan(options->scheme.day.brightness)) {
 			options->scheme.day.brightness = atof(value);
 		}
@@ -717,6 +717,6 @@ options_set_defaults(options_t *options)
 	}
 
 	if (options->use_fade < 0) options->use_fade = 1;
-        
-        if (options->fade_mode == FADE_MODE_NOT_SPECIFIED) options->fade_mode = FADE_MODE_LINEAR;
+	
+	if (options->fade_mode == FADE_MODE_NOT_SPECIFIED) options->fade_mode = FADE_MODE_LINEAR;
 }
