@@ -23,9 +23,9 @@
 #include "redshift.h"
 
 typedef struct {
-        /*
-        * For description of these options, see Elektra specification file src/elektra/redshift.ni
-        */
+	/*
+	* For description of these options, see Elektra specification file src/elektra/redshift.ni
+	*/
 	char *config_filepath;
 
 	transition_scheme_t scheme;
@@ -34,8 +34,8 @@ typedef struct {
 
 	int temp_set;
 	int use_fade;
-        easing_mode_t easing_mode;
-        
+	easing_mode_t easing_mode;
+	
 	int preserve_gamma;
 
 	const gamma_method_t *method;
