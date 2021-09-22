@@ -224,21 +224,7 @@ options_load_from_elektra(
     
     // Easing mode
     ElektraEnumFadeEasing easingMode = elektraGetFadeEasing(elektra);
-    switch (easingMode) {
-      case ELEKTRA_ENUM_FADE_EASING_LINEAR:
-	options->easing_mode = EASING_MODE_LINEAR;
-	break;
-      case ELEKTRA_ENUM_FADE_EASING_EASE_IN:
-	options->easing_mode = EASING_MODE_EASE_IN;
-	break;
-      case ELEKTRA_ENUM_FADE_EASING_EASE_OUT:
-	options->easing_mode = EASING_MODE_EASE_OUT;
-	break;
-      case ELEKTRA_ENUM_FADE_EASING_EASE_IN_OUT:
-	options->easing_mode = EASING_MODE_EASE_IN_OUT;
-	break;
-    }
-
+    options->easing_mode = easingMode;
 
     // Brightness
     *(&options->scheme.day.brightness) = elektraGetBrightnessDay(elektra);

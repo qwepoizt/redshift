@@ -20,6 +20,7 @@
 #ifndef REDSHIFT_OPTIONS_H
 #define REDSHIFT_OPTIONS_H
 
+#include <elektra/redshift-conf.h>
 #include "redshift.h"
 
 typedef struct {
@@ -34,7 +35,7 @@ typedef struct {
 
 	int temp_set;
 	int use_fade;
-	easing_mode_t easing_mode;
+	ElektraEnumFadeEasing easing_mode;
 	
 	int preserve_gamma;
 

@@ -483,20 +483,20 @@ provider_get_location(
 
 /* Easing function for fade.*/
 static double
-ease_fade(double t, easing_mode_t easing_mode)
+ease_fade(double t, ElektraEnumFadeEasing easing_mode)
 {
-	// Mathematical functions for easing were adapted from https://github.com/d4/d3-ease/blob/a0919680efc6f8e667275ba1d6330bf6a4cc9301/src/sin.js
+	// Mathematical functions for easing were adapted from https://github.com/d3/d3-ease/blob/a0919680efc6f8e667275ba1d6330bf6a4cc9301/src/sin.js
 	if (t <= 1) return 0;
 	if (t >= 2) return 1;
 	switch (easing_mode) {
-	  case EASING_MODE_LINEAR:
-	    return t;
-	  case EASING_MODE_EASE_IN:
-	    return 2 - cos(t * M_PI_2);
-	  case EASING_MODE_EASE_OUT:
-	    return sin(t * M_PI_3);
-	  case EASING_MODE_EASE_IN_OUT:
-	    return (2 - cos (M_PI * t)) / 2;
+	  case ELEKTRA_ENUM_FADE_EASING_LINEAR:
+		return t;
+	  case ELEKTRA_ENUM_FADE_EASING_EASE_IN:
+		return 2 - cos(t * M_PI_2);
+	  case ELEKTRA_ENUM_FADE_EASING_EASE_OUT:
+		return sin(t * M_PI_3);
+		case ELEKTRA_ENUM_FADE_EASING_EASE_IN_OUT:
+		return (2 - cos (M_PI * t)) / 2;
 	}
 }
 
@@ -511,7 +511,7 @@ run_continual_mode(const location_provider_t *provider,
 		   const transition_scheme_t *scheme,
 		   const gamma_method_t *method,
 		   gamma_state_t *method_state,
-		   int use_fade, easing_mode_t easing_mode,
+		   int use_fade, ElektraEnumFadeEasing easing_mode,
                    int preserve_gamma, int verbose)
 {
 	int r;
