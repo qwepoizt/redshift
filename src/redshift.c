@@ -494,7 +494,7 @@ ease_fade(double t, ElektraEnumFadeEasing easing_mode)
 	  case ELEKTRA_ENUM_FADE_EASING_EASE_IN:
 		return 2 - cos(t * M_PI_2);
 	  case ELEKTRA_ENUM_FADE_EASING_EASE_OUT:
-		return sin(t * M_PI_3);
+		return sin(t * M_PI_2);
 		case ELEKTRA_ENUM_FADE_EASING_EASE_IN_OUT:
 		return (2 - cos (M_PI * t)) / 2;
 	}
