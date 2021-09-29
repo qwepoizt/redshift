@@ -22,6 +22,7 @@
 
 #include <elektra/redshift-conf.h>
 #include "redshift.h"
+#include "elektra/redshift-conf.h"
 
 typedef struct {
 	/*
@@ -30,7 +31,7 @@ typedef struct {
 	char *config_filepath;
 
 	transition_scheme_t scheme;
-	program_mode_t mode;
+	ElektraEnumMode mode;
 	int verbose;
 
 	int temp_set;

@@ -110,15 +110,15 @@ int poll(struct pollfd *fds, int nfds, int timeout) { abort(); return -1; }
 #define CLAMP(lo,mid,up)  (((lo) > (mid)) ? (lo) : (((mid) < (up)) ? (mid) : (up)))
 
 
-/* Bounds for parameters. */
+/* Bounds for parameters.
+ * 1. LAT, LON is required to check location returned by location providers.
+ * 2. GAMMA is required to check gamma string returned by Elektra.
+ * All other parameters are checked by Elektra.
+ * */
 #define MIN_LAT   -90.0
 #define MAX_LAT    90.0
 #define MIN_LON  -180.0
 #define MAX_LON   180.0
-#define MIN_TEMP   1000
-#define MAX_TEMP  25000
-#define MIN_BRIGHTNESS  0.1
-#define MAX_BRIGHTNESS  1.0
 #define MIN_GAMMA   0.1
 #define MAX_GAMMA  10.0
 
@@ -897,8 +897,8 @@ int main(int argc, const char * const *argv, const char * const *envp)
 
 	/* Location is not needed for reset mode and manual mode. */
 	int need_location =
-		options.mode != PROGRAM_MODE_RESET &&
-		options.mode != PROGRAM_MODE_MANUAL &&
+		options.mode != ELEKTRA_ENUM_MODE_RESET &&
+		options.mode != ELEKTRA_ENUM_MODE_ONESHOTMANUAL &&
 		!options.scheme.use_time;
 	if (need_location) {
 		if (options.provider != NULL) {
@@ -954,46 +954,14 @@ int main(int argc, const char * const *argv, const char * const *envp)
 		}
 	}
 
-	if (options.mode != PROGRAM_MODE_RESET &&
-	    options.mode != PROGRAM_MODE_MANUAL) {
+	if (options.mode != ELEKTRA_ENUM_MODE_RESET &&
+	    options.mode != ELEKTRA_ENUM_MODE_ONESHOTMANUAL) {
 		if (options.verbose) {
 			printf(_("Temperatures: %dK at day, %dK at night\n"),
 			       options.scheme.day.temperature,
 			       options.scheme.night.temperature);
 		}
 
-		/* Color temperature */
-		if (options.scheme.day.temperature < MIN_TEMP ||
-		    options.scheme.day.temperature > MAX_TEMP ||
-		    options.scheme.night.temperature < MIN_TEMP ||
-		    options.scheme.night.temperature > MAX_TEMP) {
-			fprintf(stderr,
-				_("Temperature must be between %uK and %uK.\n"),
-				MIN_TEMP, MAX_TEMP);
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	if (options.mode == PROGRAM_MODE_MANUAL) {
-		/* Check color temperature to be set */
-		if (options.temp_set < MIN_TEMP ||
-		    options.temp_set > MAX_TEMP) {
-			fprintf(stderr,
-				_("Temperature must be between %uK and %uK.\n"),
-				MIN_TEMP, MAX_TEMP);
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	/* Brightness */
-	if (options.scheme.day.brightness < MIN_BRIGHTNESS ||
-	    options.scheme.day.brightness > MAX_BRIGHTNESS ||
-	    options.scheme.night.brightness < MIN_BRIGHTNESS ||
-	    options.scheme.night.brightness > MAX_BRIGHTNESS) {
-		fprintf(stderr,
-			_("Brightness values must be between %.1f and %.1f.\n"),
-			MIN_BRIGHTNESS, MAX_BRIGHTNESS);
-		exit(EXIT_FAILURE);
 	}
 
 	if (options.verbose) {
@@ -1031,7 +999,7 @@ int main(int argc, const char * const *argv, const char * const *envp)
 	gamma_state_t *method_state;
 
 	/* Gamma adjustment not needed for print mode */
-	if (options.mode != PROGRAM_MODE_PRINT) {
+	if (options.mode != ELEKTRA_ENUM_MODE_PRINT) {
 		if (options.method != NULL) {
 			/* Use method specified on command line. */
 			r = method_try_start(
@@ -1069,8 +1037,8 @@ int main(int argc, const char * const *argv, const char * const *envp)
 	}
 
 	switch (options.mode) {
-	case PROGRAM_MODE_ONE_SHOT:
-	case PROGRAM_MODE_PRINT:
+	case ELEKTRA_ENUM_MODE_ONESHOT:
+	case ELEKTRA_ENUM_MODE_PRINT:
 	{
 		location_t loc = { NAN, NAN };
 		if (need_location) {
@@ -1129,7 +1097,7 @@ int main(int argc, const char * const *argv, const char * const *envp)
 		interpolate_transition_scheme(
 			scheme, transition_prog, &interp);
 
-		if (options.verbose || options.mode == PROGRAM_MODE_PRINT) {
+		if (options.verbose || options.mode == ELEKTRA_ENUM_MODE_PRINT) {
 			print_period(period, transition_prog);
 			printf(_("Color temperature: %uK\n"),
 			       interp.temperature);
@@ -1137,7 +1105,7 @@ int main(int argc, const char * const *argv, const char * const *envp)
 			       interp.brightness);
 		}
 
-		if (options.mode != PROGRAM_MODE_PRINT) {
+		if (options.mode != ELEKTRA_ENUM_MODE_PRINT) {
 			/* Adjust temperature */
 			r = options.method->set_temperature(
 				method_state, &interp, options.preserve_gamma);
@@ -1159,7 +1127,7 @@ int main(int argc, const char * const *argv, const char * const *envp)
 		}
 	}
 	break;
-	case PROGRAM_MODE_MANUAL:
+	case ELEKTRA_ENUM_MODE_ONESHOTMANUAL:
 	{
 		if (options.verbose) {
 			printf(_("Color temperature: %uK\n"),
@@ -1186,7 +1154,7 @@ int main(int argc, const char * const *argv, const char * const *envp)
 		}
 	}
 	break;
-	case PROGRAM_MODE_RESET:
+	case ELEKTRA_ENUM_MODE_RESET:
 	{
 		/* Reset screen */
 		color_setting_t reset;
@@ -1208,7 +1176,7 @@ int main(int argc, const char * const *argv, const char * const *envp)
 		}
 	}
 	break;
-	case PROGRAM_MODE_CONTINUAL:
+	case ELEKTRA_ENUM_MODE_CONTINUAL:
 	{
 		r = run_continual_mode(
 			options.provider, location_state, scheme,
@@ -1222,7 +1190,7 @@ int main(int argc, const char * const *argv, const char * const *envp)
 	}
 
 	/* Clean up gamma adjustment state */
-	if (options.mode != PROGRAM_MODE_PRINT) {
+	if (options.mode != ELEKTRA_ENUM_MODE_PRINT) {
 		options.method->free(method_state);
 	}
 
