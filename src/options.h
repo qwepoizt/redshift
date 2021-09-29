@@ -21,6 +21,7 @@
 #define REDSHIFT_OPTIONS_H
 
 #include "redshift.h"
+#include "elektra/redshift-conf.h"
 
 typedef struct {
 	/* Path to config file */
@@ -30,7 +31,7 @@ typedef struct {
 	 * For description of these options, see Elektra specification file src/elektra/redshift.ni
 	 */
 	transition_scheme_t scheme;
-	program_mode_t mode;
+	ElektraEnumMode mode;
 	int verbose;
 
 	int temp_set;

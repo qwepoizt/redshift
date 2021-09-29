@@ -189,37 +189,17 @@ options_load_from_elektra(
     
     // Version
     if (elektraGetVersion(elektra)) {
-	printf("%s\n", PACKAGE_STRING);
-	return -1;
+		printf("%s\n", PACKAGE_STRING);
+		return -1;
     }
     
     // Verbose
     options->verbose = elektraGetVerbose(elektra);
 
     // Programm mode
-    ElektraEnumMode mode = elektraGetMode(elektra);
-    switch (mode) {
-	case ELEKTRA_ENUM_MODE_CONTINUAL: {
-	    options->mode = PROGRAM_MODE_CONTINUAL;
-	    break;
-	}
-	case ELEKTRA_ENUM_MODE_ONESHOT: {
-	    options->mode = PROGRAM_MODE_ONE_SHOT;
-	    break;
-	}
-	case ELEKTRA_ENUM_MODE_PRINT: {
-	    options->mode = PROGRAM_MODE_PRINT;
-	    break;
-	}
-	case ELEKTRA_ENUM_MODE_RESET: {
-	    options->mode = PROGRAM_MODE_RESET;
-	    break;
-	}
-	case ELEKTRA_ENUM_MODE_ONESHOTMANUAL: {
-	    options->temp_set = elektraGetTempOneshotmanual(elektra);
-	    options->mode = PROGRAM_MODE_MANUAL;
-	    break;
-	}
+    options->mode = elektraGetMode(elektra);
+    if(options->mode == ELEKTRA_ENUM_MODE_ONESHOTMANUAL) {
+            options->temp_set = elektraGetTempOneshotmanual(elektra);
     }
 
     // Brightness
@@ -234,52 +214,52 @@ options_load_from_elektra(
 
     // Location and adjustment help
     if (elektraGetAdjustmentMethodHelp(elektra)) {
-	for (int i = 0; gamma_methods[i].name != NULL; i++) {
-	    const gamma_method_t *m = &gamma_methods[i];
-	    printf(_("Help section for method `%s':\n"), m->name);
-	    printf(_("=============================\n"));
-	    m->print_help(stdout);
-	    printf(_("=============================\n\n"));
-	}
-	return -1;
+        for (int i = 0; gamma_methods[i].name != NULL; i++) {
+            const gamma_method_t *m = &gamma_methods[i];
+            printf(_("Help section for method `%s':\n"), m->name);
+            printf(_("=============================\n"));
+            m->print_help(stdout);
+            printf(_("=============================\n\n"));
+        }
+        return -1;
     }
 
     if (elektraGetProviderLocationHelp(elektra)) {
-	for (int i = 0; location_providers[i].name != NULL; i++) {
-	    const location_provider_t *p = &location_providers[i];
-	    printf(_("Help section for provider `%s':\n"), p->name);
-	    printf(_("=============================\n"));
-	    p->print_help(stdout);
-	    printf(_("=============================\n\n"));
-	}
-	return -1;
+        for (int i = 0; location_providers[i].name != NULL; i++) {
+            const location_provider_t *p = &location_providers[i];
+            printf(_("Help section for provider `%s':\n"), p->name);
+            printf(_("=============================\n"));
+            p->print_help(stdout);
+            printf(_("=============================\n\n"));
+        }
+        return -1;
     }
 
     // Location provider
     ElektraEnumProviderLocation locationProvider = elektraGetProviderLocation(elektra);
     if (locationProvider == ELEKTRA_ENUM_PROVIDER_LOCATION_LIST) {
-	// In list mode, print list of supported location providers.
-	print_provider_list(location_providers);
-	return -1;
+        // In list mode, print list of supported location providers.
+        print_provider_list(location_providers);
+        return -1;
     }
     else if (locationProvider == ELEKTRA_ENUM_PROVIDER_LOCATION_AUTO) {
-	// In auto mode, a supported provider will be chosen in redshift.c:main(...)
-	options->provider = NULL;
+        // In auto mode, a supported provider will be chosen in redshift.c:main(...)
+        options->provider = NULL;
     }
     else {
-	// Otherwise, try to find the provider by name.
-	const char *locationProviderName = elektraEnumProviderLocationToConstString(
-		elektraGetProviderLocation(elektra)
-	);
-	const location_provider_t *provider = find_location_provider(location_providers, locationProviderName);
-	if(provider == NULL) {
-	    // User picked a locationProvider provider which is not supported in this build.
-	    fprintf(stderr, _("The chosen location provider \"%s\" is not supported in this build of redshift.\n"), locationProviderName);
-	    return -1;
-	}
-	else {
-	    options->provider = provider;
-	}
+        // Otherwise, try to find the provider by name.
+        const char *locationProviderName = elektraEnumProviderLocationToConstString(
+                elektraGetProviderLocation(elektra)
+        );
+        const location_provider_t *provider = find_location_provider(location_providers, locationProviderName);
+        if(provider == NULL) {
+            // User picked a locationProvider provider which is not supported in this build.
+            fprintf(stderr, _("The chosen location provider \"%s\" is not supported in this build of redshift.\n"), locationProviderName);
+            return -1;
+        }
+        else {
+            options->provider = provider;
+        }
     }
     // Set lat and lon. Will only be used if the manual provider is chosen
     const float lat = elektraGetProviderLocationManualLat(elektra);
@@ -290,26 +270,26 @@ options_load_from_elektra(
     // Adjustment method
     ElektraEnumAdjustmentMethod adjustmentMethod = elektraGetAdjustmentMethod(elektra);
     if (adjustmentMethod == ELEKTRA_ENUM_ADJUSTMENT_METHOD_LIST) {
-	// In list mode, print list of supported adjustment methods.
-	print_method_list(gamma_methods);
-	return -1;
+        // In list mode, print list of supported adjustment methods.
+        print_method_list(gamma_methods);
+        return -1;
     } else if (adjustmentMethod == ELEKTRA_ENUM_ADJUSTMENT_METHOD_AUTO) {
-	// In auto mode, a supported method will be chosen in redshift.c:main(...)
-	options->method = NULL;
+        // In auto mode, a supported method will be chosen in redshift.c:main(...)
+        options->method = NULL;
     } else {
-	// Otherwise, try to find the method by name.
-	const char * adjustmentMethodName = elektraEnumAdjustmentMethodToConstString(
-		elektraGetAdjustmentMethod(elektra)
-	);
-	const gamma_method_t *method = find_gamma_method(gamma_methods, adjustmentMethodName);
-	if (method == NULL) {
-	    // User picked a method which is not supported in this build.
-	    fprintf(stderr, _("The chosen adjustment method \"%s\" is not supported in this build of redshift.\n"), adjustmentMethodName);
-	    return -1;
-	}
-	else {
-	    options->method = method;
-	}
+        // Otherwise, try to find the method by name.
+        const char * adjustmentMethodName = elektraEnumAdjustmentMethodToConstString(
+                elektraGetAdjustmentMethod(elektra)
+        );
+        const gamma_method_t *method = find_gamma_method(gamma_methods, adjustmentMethodName);
+        if (method == NULL) {
+            // User picked a method which is not supported in this build.
+            fprintf(stderr, _("The chosen adjustment method \"%s\" is not supported in this build of redshift.\n"), adjustmentMethodName);
+            return -1;
+        }
+        else {
+            options->method = method;
+        }
     }
 
     options->method_crtc = elektraGetAdjustmentCrtc(elektra);
@@ -341,23 +321,23 @@ options_load_from_elektra(
     options->scheme.use_time = elektraGetProvider(elektra) == ELEKTRA_ENUM_PROVIDER_TIME;
 
     if(options->scheme.use_time) {
-	const char* dawnStartString = elektraGetProviderTimeDawnStart(elektra);
-	const char* dawnEndString = elektraGetProviderTimeDawnEnd(elektra);
-	const char* duskStartString = elektraGetProviderTimeDuskStart(elektra);
-	const char* duskEndString = elektraGetProviderTimeDuskEnd(elektra);
-	options->scheme.dawn.start = parse_transition_time(dawnStartString, NULL);
-	options->scheme.dawn.end = parse_transition_time(dawnEndString, NULL);
-	options->scheme.dusk.start = parse_transition_time(duskStartString, NULL);
-	options->scheme.dusk.end = parse_transition_time(duskEndString, NULL);
+        const char* dawnStartString = elektraGetProviderTimeDawnStart(elektra);
+        const char* dawnEndString = elektraGetProviderTimeDawnEnd(elektra);
+        const char* duskStartString = elektraGetProviderTimeDuskStart(elektra);
+        const char* duskEndString = elektraGetProviderTimeDuskEnd(elektra);
+        options->scheme.dawn.start = parse_transition_time(dawnStartString, NULL);
+        options->scheme.dawn.end = parse_transition_time(dawnEndString, NULL);
+        options->scheme.dusk.start = parse_transition_time(duskStartString, NULL);
+        options->scheme.dusk.end = parse_transition_time(duskEndString, NULL);
 
-	// Validation from redshift.c:main(...)
-	if (options->scheme.dawn.start > options->scheme.dawn.end ||
-	    options->scheme.dawn.end > options->scheme.dusk.start ||
-	    options->scheme.dusk.start > options->scheme.dusk.end) {
-	    fputs(_("Invalid dawn/dusk time configuration!\n"),
-		  stderr);
-	    return -1;
-	}
+        // Validation from redshift.c:main(...)
+        if (options->scheme.dawn.start > options->scheme.dawn.end ||
+            options->scheme.dawn.end > options->scheme.dusk.start ||
+            options->scheme.dusk.start > options->scheme.dusk.end) {
+            fputs(_("Invalid dawn/dusk time configuration!\n"),
+                  stderr);
+            return -1;
+        }
     }
     // END Block
 
@@ -402,6 +382,6 @@ options_init(options_t *options)
 	options->use_fade = -1;
     options->fade_duration = -1;
 	options->preserve_gamma = 1;
-	options->mode = PROGRAM_MODE_CONTINUAL;
+	options->mode = ELEKTRA_ENUM_MODE_CONTINUAL;
 	options->verbose = 0;
 }
