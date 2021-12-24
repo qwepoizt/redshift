@@ -508,7 +508,8 @@ run_continual_mode(const location_provider_t *provider,
 		   const transition_scheme_t *scheme,
 		   const gamma_method_t *method,
 		   gamma_state_t *method_state,
-		   int use_fade, int preserve_gamma, int verbose)
+		   int use_fade, long fade_duration,
+		   int preserve_gamma, int verbose)
 {
 	int r;
 
@@ -661,8 +662,9 @@ run_continual_mode(const location_provider_t *provider,
 			     color_setting_diff_is_major(
 				     &target_interp,
 				     &prev_target_interp))) {
-				fade_length = FADE_LENGTH;
-				fade_time = 0;
+                // Scale fade_length according to desired fade_duration.
+                fade_length = (FADE_LENGTH * (fade_duration * 1000)) / (FADE_LENGTH * SLEEP_DURATION_SHORT);
+                fade_time = 0;
 				fade_start_interp = interp;
 			}
 		}
@@ -1177,7 +1179,8 @@ int main(int argc, const char * const *argv, const char * const *envp)
 		r = run_continual_mode(
 			options.provider, location_state, scheme,
 			options.method, method_state,
-			options.use_fade, options.preserve_gamma,
+			options.use_fade, options.fade_duration,
+			options.preserve_gamma,
 			options.verbose);
 		if (r < 0) exit(EXIT_FAILURE);
 	}

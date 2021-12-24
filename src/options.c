@@ -98,8 +98,8 @@ static void
 print_method_list(const gamma_method_t *gamma_methods)
 {
     if (gamma_methods[0].name == NULL) {
-        printf("This build of redshift contains no adjustment methods that work on your system!");
-        return;
+	printf("This build of redshift contains no adjustment methods that work on your system!");
+	return;
     }
     
 	fputs(_("Available adjustment methods in this build of redshift:\n"), stdout);
@@ -117,8 +117,8 @@ static void
 print_provider_list(const location_provider_t location_providers[])
 {
     if (location_providers[0].name == NULL) {
-        printf("This build of redshift contains no adjustment methods that work on your system!");
-        return;
+	printf("This build of redshift contains no adjustment methods that work on your system!");
+	return;
     }
     
 	fputs(_("Available location providers in this build of redshift:\n"), stdout);
@@ -176,10 +176,10 @@ find_location_provider(
  */
 int
 options_load_from_elektra(
-        options_t *options,
-        Elektra *elektra,
-        const gamma_method_t *gamma_methods,
-        const location_provider_t *location_providers) {
+	options_t *options,
+	Elektra *elektra,
+	const gamma_method_t *gamma_methods,
+	const location_provider_t *location_providers) {
     /**
      * Before using Elektra, there were two sources for configuration: CLI options and config file.
      * From redshift's point of view there is only one source now, namely Elektra.
@@ -194,8 +194,8 @@ options_load_from_elektra(
     
     // Version
     if (elektraGetVersion(elektra)) {
-        printf("%s\n", PACKAGE_STRING);
-        return -1;
+		printf("%s\n", PACKAGE_STRING);
+		return -1;
     }
     
     // Verbose
@@ -307,6 +307,8 @@ options_load_from_elektra(
 
     // Fade
     options->use_fade = !elektraGetFadeFast(elektra);
+    
+    options->fade_duration = elektraGetFadeDuration(elektra);
 
     // Temperature
     options->scheme.day.temperature = elektraGetTempDay(elektra);
@@ -383,6 +385,7 @@ options_init(options_t *options)
 	options->provider = NULL;
 
 	options->use_fade = -1;
+    options->fade_duration = -1;
 	options->preserve_gamma = 1;
 	options->mode = ELEKTRA_ENUM_MODE_CONTINUAL;
 	options->verbose = 0;
