@@ -206,6 +206,10 @@ options_load_from_elektra(
     if(options->mode == ELEKTRA_ENUM_MODE_ONESHOTMANUAL) {
             options->temp_set = elektraGetTempOneshotmanual(elektra);
     }
+    
+    // Easing mode
+    ElektraEnumFadeEasing easingMode = elektraGetFadeEasing(elektra);
+    options->easing_mode = easingMode;
 
     // Brightness
     *(&options->scheme.day.brightness) = elektraGetBrightnessDay(elektra);
@@ -376,9 +380,9 @@ options_init(options_t *options)
 	options->temp_set = -1;
 
 	options->method = NULL;
-    options->method_crtc = -1;
-    options->method_screen = -1;
-    options->method_drm_card = -1;
+	options->method_crtc = -1;
+	options->method_screen = -1;
+	options->method_drm_card = -1;
 
 	options->provider = NULL;
 

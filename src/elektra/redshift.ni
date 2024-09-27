@@ -97,6 +97,21 @@ opt = f
 opt/long = fade-fast
 opt/arg = none
 
+[fade/easing]
+type = enum
+description = The easing mode to use during a fade between color temperatures. Use something other than "linear" to make fades more pleasant for your eyes. For details about the supported easing functions, see https://easings.net/
+default = linear
+check/enum = #3
+check/enum/#0 = linear
+check/enum/#1 = ease-in
+check/enum/#2 = ease-out
+check/enum/#3 = ease-in-out
+default = ease-in-out
+example = ease-in
+opt = e
+opt/long = fade-easing
+opt/arg = required
+
 [brightness/day]
 type = float
 description = The screen brightness during daytime. If both day and night brightness are set, these will overrule the value of brightness.
